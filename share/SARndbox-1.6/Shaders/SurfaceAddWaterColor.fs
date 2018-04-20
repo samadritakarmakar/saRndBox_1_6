@@ -161,6 +161,8 @@ void addWaterColor(in vec2 fragCoord,inout vec4 baseColor)
 	         texture2DRect(bathymetrySampler,waterLevelTexCoord.xy).r)*0.25;
 	float waterLevel=texture2DRect(quantitySampler,waterLevelTexCoord).r-b;
 	
+	
+	
 	/* Check if the surface is under water: */
 	if(waterLevel>0.0)
 		{
@@ -168,12 +170,30 @@ void addWaterColor(in vec2 fragCoord,inout vec4 baseColor)
 		// float colorW=max(snoise(vec3(fragCoord*0.05,waterAnimationTime*0.25)),0.0); // Simple noise function
 		// float colorW=max(turb(vec3(fragCoord*0.05,waterAnimationTime*0.25)),0.0); // Turbulence noise
 		
+		//Added by Samadrita Karmakar (sam90_karmakar@yahoo.co.in
+		float vx=((texture2DRect(quantitySampler,waterLevelTexCoord).g)-b)/waterLevel;
+        float vy=((texture2DRect(quantitySampler,waterLevelTexCoord).b)-b)/waterLevel;
+        //vec2 vel=(vx, vy);
+        float abs_vel=sqrt(vx*vx+vy*vy);
+        float max_vel=4.0; //Arbitrary Value
+        //Linear Interpolation of Color
+        float a1=.075;
+        if (abs_vel<max_vel)
+            max_vel=abs_vel; //To avoid going over 1.0 for color value
+        float a2=(1-a1)/max_vel;
+        vec3 setWaterColor.r=.075;
+        setWaterColor.g=a1+a2*abs_vel;
+        setWaterColor.b=a1+a2*(max_vel-abs_vel);
+        //End of Addition by Samadrita Karmakar
+        
 		vec3 wn=normalize(vec3(texture2DRect(quantitySampler,vec2(waterLevelTexCoord.x-1.0,waterLevelTexCoord.y)).r-
 		                       texture2DRect(quantitySampler,vec2(waterLevelTexCoord.x+1.0,waterLevelTexCoord.y)).r,
 		                       texture2DRect(quantitySampler,vec2(waterLevelTexCoord.x,waterLevelTexCoord.y-1.0)).r-
 		                       texture2DRect(quantitySampler,vec2(waterLevelTexCoord.x,waterLevelTexCoord.y+1.0)).r,
 		                       0.25));
-		float colorW=pow(dot(wn,normalize(vec3(0.075,0.075,1.0))),100.0)*1.0-0.0;
+        //Commented  and added out by Samadrita Karmakar
+		//float colorW=pow(dot(wn,normalize(vec3(0.075,0.075,1.0))),100.0)*1.0-0.0;
+		float colorW=pow(dot(wn,normalize(setWaterColor)),100.0)*1.0-0.0;
 		
 		vec4 waterColor=vec4(colorW,colorW,1.0,1.0); // Water
 		// vec4 waterColor=vec4(1.0-colorW,1.0-colorW*2.0,0.0,1.0); // Lava
