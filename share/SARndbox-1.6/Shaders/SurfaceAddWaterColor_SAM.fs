@@ -171,11 +171,11 @@ void addWaterColor(in vec2 fragCoord,inout vec4 baseColor)
 		// float colorW=max(turb(vec3(fragCoord*0.05,waterAnimationTime*0.25)),0.0); // Turbulence noise
 		
 		//Added by Samadrita Karmakar (sam90_karmakar@yahoo.co.in
-		float vx=((texture2DRect(quantitySampler,waterLevelTexCoord).g));
-        float vy=((texture2DRect(quantitySampler,waterLevelTexCoord).b));
+		float vx=((texture2DRect(quantitySampler,waterLevelTexCoord).g)/waterLevel);
+        float vy=((texture2DRect(quantitySampler,waterLevelTexCoord).b)/waterLevel);
         //vec2 vel=(vx, vy);
         float abs_vel=sqrt(vx*vx+vy*vy);
-        float max_vel=7.0; //Arbitrary Value
+        float max_vel=40.0; //Arbitrary Value
         //Linear Interpolation of Color
         float a1=.075;
 		//float a2=1-a1;//DGC

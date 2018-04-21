@@ -175,21 +175,21 @@ void addWaterColor(in vec2 fragCoord,inout vec4 baseColor)
         float vy=((texture2DRect(quantitySampler,waterLevelTexCoord).b));
         //vec2 vel=(vx, vy);
         float abs_vel=sqrt(vx*vx+vy*vy);
-        float max_vel=7.0; //Arbitrary Value
+        float max_vel=10.0; //Arbitrary Value
         //Linear Interpolation of Color
         float a1=.075;
-		//float a2=1-a1;//DGC
+		float a2=1-a1;//DGC
         if (abs_vel>max_vel)
-            max_vel=abs_vel; //To avoid going over 1.0 for color value
-			//abs_vel=max_vel;//DGC
-        float a2=(1-a1)/max_vel;
+            //max_vel=abs_vel; //To avoid going over 1.0 for color value
+			abs_vel=max_vel;//DGC
+        //float a2=(1-a1)/max_vel;
 
         vec3 setWaterColor;
 		setWaterColor.r=.0;
-        setWaterColor.g=a1+a2*abs_vel;
-		//setWaterColor.g=a1+a2*(abs_vel/max_vel);//DGC
-        setWaterColor.b=a1+a2*(max_vel-abs_vel);
-		//setWaterColor.b=1-setWaterColor.g;//DGC
+        //setWaterColor.g=a1+a2*abs_vel;
+		setWaterColor.g=a1+a2*(abs_vel/max_vel);//DGC
+        //setWaterColor.b=a1+a2*(max_vel-abs_vel);
+		setWaterColor.b=1-setWaterColor.g;//DGC
         //End of Addition by Samadrita Karmakar
         
 		vec3 wn=normalize(vec3(texture2DRect(quantitySampler,vec2(waterLevelTexCoord.x-1.0,waterLevelTexCoord.y)).r-
